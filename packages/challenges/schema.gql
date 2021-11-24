@@ -1,0 +1,12 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""recipe """
+type Hello {
+  message: String
+}
+
+type Query {
+  hello: Hello!
+}
