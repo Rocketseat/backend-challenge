@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { CreateChallengeInput } from '../../dto/create-challenge.input';
+import { IChallenge } from '../../interfaces/IChallenge.interface';
 import { IChallengeRepository } from '../IChallenge.repository';
 
 @Injectable()
 export class ChallengeInMemoryRepository implements IChallengeRepository {
-  private _challenges: CreateChallengeInput[] = [];
+  private _challenges: IChallenge[] = [];
 
   async create(createChallengeInput: CreateChallengeInput) {
     const challenge = {
@@ -16,5 +17,23 @@ export class ChallengeInMemoryRepository implements IChallengeRepository {
     this._challenges.push(challenge);
 
     return challenge;
+  }
+
+  async findById(challengeId: string) {
+    return this._challenges.find((challenge) => challenge.id === challengeId);
+  }
+
+  async removeById(challengeId: string) {
+    const challengeIndex = this._challenges.findIndex(
+      (challenge) => challenge.id === challengeId,
+    );
+
+    if (challengeIndex === -1) {
+      return false;
+    }
+
+    this._challenges.splice(challengeIndex, 1);
+
+    return true;
   }
 }
