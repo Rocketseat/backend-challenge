@@ -36,4 +36,21 @@ export class ChallengeInMemoryRepository implements IChallengeRepository {
 
     return true;
   }
+
+  async updateById(challengeId: string, challenge: Partial<IChallenge>) {
+    const challengeIndex = this._challenges.findIndex(
+      (challengeItem) => challengeItem.id === challengeId,
+    );
+
+    if (challengeIndex === -1) {
+      return null;
+    }
+
+    this._challenges[challengeIndex] = {
+      ...this._challenges[challengeIndex],
+      ...challenge,
+    };
+
+    return this._challenges[challengeIndex];
+  }
 }
