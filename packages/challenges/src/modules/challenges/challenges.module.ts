@@ -6,6 +6,8 @@ import { RemoveChallengeUseCase } from './useCase/removeChallenge/RemoveChalleng
 import { RemoveChallengeResolver } from './useCase/removeChallenge/RemoveChallenge.resolver';
 import { UpdateChallengeUseCase } from './useCase/updateChallenge/UpdateChallenge.useCase';
 import { UpdateChallengeResolver } from './useCase/updateChallenge/UpdateChallenge.resolver';
+import { ListChallengesResolver } from './useCase/listChallenges/ListChallenges.resolver';
+import { ListChallengesUseCase } from './useCase/listChallenges/ListChallenges.useCase';
 
 @Module({
   providers: [
@@ -13,9 +15,11 @@ import { UpdateChallengeResolver } from './useCase/updateChallenge/UpdateChallen
     CreateChallengeUseCaseResolver,
     RemoveChallengeResolver,
     UpdateChallengeResolver,
+    ListChallengesResolver,
     CreateChallengeUseCase,
     RemoveChallengeUseCase,
     UpdateChallengeUseCase,
+    ListChallengesUseCase,
   ],
 })
 export class ChallengesModule {}

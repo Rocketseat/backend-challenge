@@ -1,5 +1,11 @@
+import { PaginationInput } from '../dto/pagination.input';
 import { IChallenge } from '../interfaces/IChallenge.interface';
+import { IPagination } from '../interfaces/IPagination.interface';
 
+interface IListAllResponse {
+  challenges: IChallenge[];
+  pagination: IPagination;
+}
 export interface IChallengeRepository {
   create(challenge: Partial<IChallenge>): Promise<IChallenge>;
   findById(id: string): Promise<IChallenge>;
@@ -8,4 +14,8 @@ export interface IChallengeRepository {
     challengeId: string,
     challenge: Partial<IChallenge>,
   ): Promise<IChallenge>;
+  listAll(
+    pagination?: PaginationInput,
+    search?: string,
+  ): Promise<IListAllResponse>;
 }

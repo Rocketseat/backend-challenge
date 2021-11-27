@@ -8,7 +8,7 @@ import { ChallengesModule } from './modules/challenges/challenges.module';
     HelloModule,
     GraphQLModule.forRoot({
       installSubscriptionHandlers: true,
-      autoSchemaFile: '../schema.gql',
+      autoSchemaFile: 'schema.gql',
     }),
     ChallengesModule,
   ],

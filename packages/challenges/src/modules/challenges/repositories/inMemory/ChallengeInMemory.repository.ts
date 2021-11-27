@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateChallengeInput } from '../../dto/create-challenge.input';
+import { PaginationInput } from '../../dto/pagination.input';
 import { IChallenge } from '../../interfaces/IChallenge.interface';
 import { IChallengeRepository } from '../IChallenge.repository';
 
@@ -52,5 +53,41 @@ export class ChallengeInMemoryRepository implements IChallengeRepository {
     };
 
     return this._challenges[challengeIndex];
+  }
+
+  private searchText(text: string, search: string) {
+    return text.toLowerCase().includes(search.toLowerCase());
+  }
+
+  async listAll(pagination?: PaginationInput, search?: string) {
+    const { page, pageSize } = pagination;
+
+    const challengesFiltered = search
+      ? this._challenges.filter(
+          (challenge) =>
+            this.searchText(challenge.title, search) ||
+            this.searchText(challenge.description, search),
+        )
+      : this._challenges;
+
+    const totalChallenges = challengesFiltered.length;
+    const totalPages = Math.ceil(totalChallenges / pageSize);
+    const containsNextPage = page < totalPages;
+
+    const challenges = challengesFiltered.slice(
+      pageSize * (page - 1),
+      pageSize * page,
+    );
+
+    return {
+      challenges,
+      pagination: {
+        page,
+        pageSize,
+        totalPages,
+        totalChallenges,
+        containsNextPage,
+      },
+    };
   }
 }
