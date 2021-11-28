@@ -21,5 +21,6 @@ import { ListChallengesUseCase } from './useCase/listChallenges/ListChallenges.u
     UpdateChallengeUseCase,
     ListChallengesUseCase,
   ],
+  exports: [ChallengeRepository],
 })
 export class ChallengesModule {}

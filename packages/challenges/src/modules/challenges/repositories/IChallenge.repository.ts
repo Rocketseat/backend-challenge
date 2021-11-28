@@ -18,4 +18,5 @@ export interface IChallengeRepository {
     pagination?: PaginationInput,
     search?: string,
   ): Promise<IListAllResponse>;
+  idIsValid(id: string): Promise<boolean>;
 }

@@ -90,4 +90,12 @@ export class ChallengeInMemoryRepository implements IChallengeRepository {
       },
     };
   }
+
+  async idIsValid(challengeId: string) {
+    const idValid = this._challenges.some(
+      (challenge) => challenge.id === challengeId,
+    );
+
+    return idValid;
+  }
 }
