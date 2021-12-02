@@ -1,6 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { Transport, MicroserviceOptions } from '@nestjs/microservices';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -12,6 +13,20 @@ async function bootstrap() {
     }),
   );
 
+  const appCorrection =
+    await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
+      transport: Transport.KAFKA,
+      options: {
+        client: {
+          brokers: ['localhost:9092'],
+        },
+        consumer: {
+          groupId: 'answer-consumer' + Math.random(),
+        },
+      },
+    });
+
+  await appCorrection.listen();
   await app.listen(3000);
   console.log(`Application is running on: ${await app.getUrl()}/graphql`);
 }

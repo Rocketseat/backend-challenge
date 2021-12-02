@@ -26,11 +26,13 @@
     "@nestjs/config": "^1.1.5",
     "@nestjs/core": "^8.0.0",
     "@nestjs/graphql": "^9.1.1",
+    "@nestjs/microservices": "^8.2.3",
     "@nestjs/platform-express": "^8.0.0",
     "apollo-server-express": "^3.5.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
     "graphql": "^15",
+    "kafkajs": "^1.15.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0"

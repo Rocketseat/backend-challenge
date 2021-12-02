@@ -10,4 +10,6 @@ export interface ICreateAnswerInput {
 
 export interface IAnswerRepository {
   create(creatAnswerInput: ICreateAnswerInput): Promise<IAnswer>;
+  updateById(answerId: string, answer: Partial<IAnswer>): Promise<IAnswer>;
+  findById(answerId: string): Promise<IAnswer>;
 }

@@ -10,10 +10,13 @@ import { AnswerRepository } from '../../repositories/prisma/Answer.repository';
 import { SendAnswerUseCase } from './SendAnswer.useCase';
 import { ConfigModule } from '@nestjs/config';
 import { GitHubProviderMock } from '../../../../providers/__mocks__/GitHubMock.providers';
+import { ClientKafka, ClientsModule } from '@nestjs/microservices';
+import { KafkaClientMock } from '../../../../__mocks__/KafkaClientMock';
 
 describe('Send Answer Use Case', () => {
   let sendAnswerUseCase: SendAnswerUseCase;
   let challengeRepository: ChallengeRepository;
+  let kafkaClientMock: KafkaClientMock;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -22,6 +25,11 @@ describe('Send Answer Use Case', () => {
         ConfigModule.forRoot({
           envFilePath: '.env.test',
         }),
+        ClientsModule.register([
+          {
+            name: 'answer-kafka',
+          },
+        ]),
       ],
       providers: [
         SendAnswerUseCase,
@@ -37,10 +45,21 @@ describe('Send Answer Use Case', () => {
           provide: GitHubProvider,
           useClass: GitHubProviderMock,
         },
+        {
+          provide: ClientKafka,
+          useClass: KafkaClientMock,
+        },
       ],
     }).compile();
 
+    kafkaClientMock = new KafkaClientMock();
+
     sendAnswerUseCase = module.get<SendAnswerUseCase>(SendAnswerUseCase);
+    jest
+      .spyOn(sendAnswerUseCase as any, 'kafkaConnect')
+      .mockImplementation(() => kafkaClientMock);
+
+    await sendAnswerUseCase.onModuleInit();
     challengeRepository = module.get<ChallengeRepository>(ChallengeRepository);
   });
 
@@ -69,7 +88,19 @@ describe('Send Answer Use Case', () => {
       grade: null,
     };
 
+    const expectedMessageSendToKafka = {
+      topic: 'challenge.correction',
+      messages: [
+        {
+          key: '1',
+          value:
+            '{"submissionId":"1","repositoryUrl":"https://github.com/jorge-lba/ignite-tests-challenge"}',
+        },
+      ],
+    };
+
     expect(response).toEqual(expect.objectContaining(expectedResponse));
+    expect(kafkaClientMock.data).toEqual(expectedMessageSendToKafka);
   });
 
   it('should be record the response with error status if the challenge does not exist', async () => {
