@@ -1,5 +1,5 @@
 import { Injectable, Scope } from '@nestjs/common';
 import { AnswerInMemoryRepository } from '../inMemory/AnswerInMemory.repository';
 
-@Injectable({ scope: Scope.DEFAULT })
+@Injectable()
 export class AnswerRepository extends AnswerInMemoryRepository {}
