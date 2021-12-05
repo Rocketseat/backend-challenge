@@ -42,4 +42,8 @@ export class AnswerInMemoryRepository implements IAnswerRepository {
 
     return answer;
   }
+
+  async findAll(): Promise<IAnswer[]> {
+    return this._answers;
+  }
 }
