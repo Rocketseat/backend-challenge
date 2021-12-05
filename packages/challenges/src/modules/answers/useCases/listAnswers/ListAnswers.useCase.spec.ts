@@ -49,4 +49,29 @@ describe('List Answers Use Case', () => {
 
     expect(answers).toEqual([firstAnswer, secondAnswer]);
   });
+
+  it('should be filter answers by challenger id', async () => {
+    const [firstAnswer] = await Promise.all([
+      answerRepository.create({
+        challengeId: '1',
+        link: 'https://github.com/jorge-lba/ignite-tests-challenge',
+        grade: 8,
+        status: Status.Done,
+      }),
+      answerRepository.create({
+        challengeId: '2',
+        link: 'https://github.com/',
+        grade: null,
+        status: Status.Error,
+      }),
+    ]);
+
+    const answers = await listAnswersUseCase.execute({
+      filter: {
+        challengeId: '1',
+      },
+    });
+
+    expect(answers).toEqual([firstAnswer]);
+  });
 });
