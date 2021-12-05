@@ -7,6 +7,7 @@ import { AnswerRepository } from './repositories/prisma/Answer.repository';
 import { ChallengesModule } from '../challenges/challenges.module';
 import { Transport, ClientsModule, ClientKafka } from '@nestjs/microservices';
 import { UpdateAnswerUseCase } from './useCases/updateAnswer/UpdateAnswer.useCase';
+import { ListAnswersUseCase } from './useCases/listAnswers/ListAnswers.useCase';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { UpdateAnswerUseCase } from './useCases/updateAnswer/UpdateAnswer.useCas
     GitHubProvider,
     SendAnswerUseCase,
     SendAnswerResolver,
+    ListAnswersUseCase,
     ClientKafka,
   ],
   controllers: [UpdateAnswerUseCase],
