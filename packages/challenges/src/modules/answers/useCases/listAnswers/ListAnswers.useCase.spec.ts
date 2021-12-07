@@ -99,4 +99,30 @@ describe('List Answers Use Case', () => {
 
     expect(answers).toEqual([secondAnswer]);
   });
+
+  it('should be filter answers by date between', async () => {
+    const [, , , answerNotExpected] = await Promise.all(
+      ['2020-01-01', '2020-01-15', '2020-02-01', '2020-03-01'].map(
+        (date, index) =>
+          answerRepository.create({
+            challengeId: `${index}`,
+            link: 'https://github.com/jorge-lba/ignite-tests-challenge',
+            grade: Math.floor(Math.random() * 10) + 1,
+            status: Status[Math.floor(Math.random() * 2) + 1],
+            createdAt: new Date(date),
+          }),
+      ),
+    );
+
+    const answers = await listAnswersUseCase.execute({
+      filter: {
+        dateBetween: {
+          start: '2020-01-01',
+          end: '2020-02-01',
+        },
+      },
+    });
+
+    expect(answers).not.toEqual(expect.arrayContaining([answerNotExpected]));
+  });
 });
