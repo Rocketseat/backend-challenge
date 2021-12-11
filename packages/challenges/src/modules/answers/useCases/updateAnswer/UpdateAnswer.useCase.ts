@@ -17,7 +17,7 @@ interface IKafkaMessage {
 export class UpdateAnswerUseCase {
   constructor(private readonly answerRepository: AnswerRepository) {}
 
-  @MessagePattern('answer.correction')
+  @MessagePattern('challenge.correction.reply')
   async execute(@Payload() { value }: IKafkaMessage) {
     await this.answerRepository.updateById(value.submissionId, {
       grade: value.grade,
