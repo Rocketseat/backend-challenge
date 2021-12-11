@@ -8,21 +8,27 @@ import { ChallengesModule } from '../challenges/challenges.module';
 import { Transport, ClientsModule, ClientKafka } from '@nestjs/microservices';
 import { UpdateAnswerUseCase } from './useCases/updateAnswer/UpdateAnswer.useCase';
 import { ListAnswersUseCase } from './useCases/listAnswers/ListAnswers.useCase';
+import { ListAnswersResolver } from './useCases/listAnswers/ListAnswers.resolver';
+import { UpdateAnswerController } from './useCases/updateAnswer/UpdateAnswer.controller';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
     HttpModule,
     ChallengesModule,
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+    }),
     ClientsModule.register([
       {
         name: 'answer-kafka',
         transport: Transport.KAFKA,
         options: {
           client: {
-            brokers: ['localhost:9092'],
+            brokers: [process.env.KAFKA_BROKER],
           },
           consumer: {
-            groupId: 'answer-producer-' + Date.now(),
+            groupId: 'answer-consumer',
           },
         },
       },
@@ -34,8 +40,11 @@ import { ListAnswersUseCase } from './useCases/listAnswers/ListAnswers.useCase';
     SendAnswerUseCase,
     SendAnswerResolver,
     ListAnswersUseCase,
+    ListAnswersResolver,
+    UpdateAnswerUseCase,
     ClientKafka,
   ],
-  controllers: [UpdateAnswerUseCase],
+  controllers: [UpdateAnswerController],
+  exports: [AnswerRepository],
 })
 export class AnswersModule {}
