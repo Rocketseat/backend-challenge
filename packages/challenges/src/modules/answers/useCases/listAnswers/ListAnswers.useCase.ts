@@ -8,7 +8,7 @@ import {
 import { AnswerRepository } from '../../repositories/prisma/Answer.repository';
 
 interface IListAnswersInput {
-  pagination?: IPagination;
+  pagination?: Partial<IPagination>;
   filter?: IFilter;
 }
 @Injectable()
