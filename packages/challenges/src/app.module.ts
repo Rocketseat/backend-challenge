@@ -9,9 +9,11 @@ import { AnswersModule } from './modules/answers/answers.module';
       installSubscriptionHandlers: true,
       autoSchemaFile: 'schema.gql',
     }),
-    ChallengesModule,
     AnswersModule,
-    ConfigModule.forRoot(),
+    ChallengesModule,
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+    }),
   ],
 })
 export class AppModule {}
