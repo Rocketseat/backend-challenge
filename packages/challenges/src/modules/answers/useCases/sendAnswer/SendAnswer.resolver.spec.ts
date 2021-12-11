@@ -9,13 +9,23 @@ import { ChallengeInMemoryRepository } from '../../../challenges/repositories/in
 import { GitHubProvider } from '../../../../providers/GitHub.provider';
 import { GitHubProviderMock } from '../../../../providers/__mocks__/GitHubMock.providers';
 import { ConfigModule } from '@nestjs/config';
+import { ClientKafka, ClientsModule } from '@nestjs/microservices';
+import { KafkaClientMock } from '../../../../__mocks__/KafkaClientMock';
 
 describe('Send Answer Resolver', () => {
   let resolver: SendAnswerResolver;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [HttpModule, ConfigModule.forRoot()],
+      imports: [
+        HttpModule,
+        ConfigModule.forRoot(),
+        ClientsModule.register([
+          {
+            name: 'answer-kafka',
+          },
+        ]),
+      ],
       providers: [
         SendAnswerResolver,
         SendAnswerUseCase,
