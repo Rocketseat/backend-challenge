@@ -70,8 +70,8 @@ export class ChallengeInMemoryRepository implements IChallengeRepository {
         )
       : this._challenges;
 
-    const totalChallenges = challengesFiltered.length;
-    const totalPages = Math.ceil(totalChallenges / pageSize);
+    const totalItems = challengesFiltered.length;
+    const totalPages = Math.ceil(totalItems / pageSize);
     const containsNextPage = page < totalPages;
 
     const challenges = challengesFiltered.slice(
@@ -85,7 +85,7 @@ export class ChallengeInMemoryRepository implements IChallengeRepository {
         page,
         pageSize,
         totalPages,
-        totalChallenges,
+        totalItems,
         containsNextPage,
       },
     };

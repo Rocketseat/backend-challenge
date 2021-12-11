@@ -85,7 +85,7 @@ describe('List Challenge Use Case', () => {
     expect(challenges.at(0).title).toContain('0');
     expect(challenges.at(-1).title).toContain('4');
     expect(pagination.totalPages).toBe(expectedTotalPages);
-    expect(pagination.totalChallenges).toBe(CREATED_QUANTITY);
+    expect(pagination.totalItems).toBe(CREATED_QUANTITY);
     expect(pagination.page).toBe(expectedPage);
     expect(pagination.pageSize).toBe(expectedQuantity);
     expect(pagination.containsNextPage).toBe(expectedContainsNextPage);

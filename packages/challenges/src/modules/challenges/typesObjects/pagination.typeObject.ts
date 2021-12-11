@@ -13,7 +13,7 @@ export class Pagination implements IPagination {
   totalPages: number;
 
   @Field(() => Int)
-  totalChallenges: number;
+  totalItems: number;
 
   @Field(() => Boolean)
   containsNextPage: boolean;

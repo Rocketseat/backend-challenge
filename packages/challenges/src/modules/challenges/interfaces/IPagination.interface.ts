@@ -2,6 +2,6 @@ export interface IPagination {
   page: number;
   pageSize: number;
   totalPages: number;
-  totalChallenges: number;
+  totalItems: number;
   containsNextPage: boolean;
 }

@@ -9,8 +9,7 @@ import { ChallengeInMemoryRepository } from '../../../challenges/repositories/in
 import { GitHubProvider } from '../../../../providers/GitHub.provider';
 import { GitHubProviderMock } from '../../../../providers/__mocks__/GitHubMock.providers';
 import { ConfigModule } from '@nestjs/config';
-import { ClientKafka, ClientsModule } from '@nestjs/microservices';
-import { KafkaClientMock } from '../../../../__mocks__/KafkaClientMock';
+import { ClientsModule } from '@nestjs/microservices';
 
 describe('Send Answer Resolver', () => {
   let resolver: SendAnswerResolver;
