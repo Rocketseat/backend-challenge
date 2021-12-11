@@ -45,7 +45,7 @@ describe('List Answers Use Case', () => {
       }),
     ]);
 
-    const answers = await listAnswersUseCase.execute();
+    const { answers } = await listAnswersUseCase.execute();
 
     expect(answers).toEqual([firstAnswer, secondAnswer]);
   });
@@ -66,7 +66,7 @@ describe('List Answers Use Case', () => {
       }),
     ]);
 
-    const answers = await listAnswersUseCase.execute({
+    const { answers } = await listAnswersUseCase.execute({
       filter: {
         challengeId: '1',
       },
@@ -91,7 +91,7 @@ describe('List Answers Use Case', () => {
       }),
     ]);
 
-    const answers = await listAnswersUseCase.execute({
+    const { answers } = await listAnswersUseCase.execute({
       filter: {
         status: Status.Error,
       },
@@ -114,7 +114,7 @@ describe('List Answers Use Case', () => {
       ),
     );
 
-    const answers = await listAnswersUseCase.execute({
+    const { answers } = await listAnswersUseCase.execute({
       filter: {
         dateBetween: {
           start: '2020-01-01',
@@ -124,5 +124,30 @@ describe('List Answers Use Case', () => {
     });
 
     expect(answers).not.toEqual(expect.arrayContaining([answerNotExpected]));
+  });
+
+  it('should be get top five answers', async () => {
+    await Promise.all(
+      Array.from(Array(15)).map((_, index) =>
+        answerRepository.create({
+          challengeId: `${index}`,
+          link: 'https://github.com/jorge-lba/ignite-tests-challenge',
+          grade: Math.floor(Math.random() * 10) + 1,
+          status: Status[Math.floor(Math.random() * 2) + 1],
+          createdAt: new Date(),
+        }),
+      ),
+    );
+
+    const ITEMS_FOR_PAGE = 5;
+
+    const { answers } = await listAnswersUseCase.execute({
+      pagination: {
+        page: 1,
+        pageSize: ITEMS_FOR_PAGE,
+      },
+    });
+
+    expect(answers).toHaveLength(ITEMS_FOR_PAGE);
   });
 });
