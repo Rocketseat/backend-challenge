@@ -30,7 +30,7 @@ export interface IAnswerRepository {
   updateById(answerId: string, answer: Partial<IAnswer>): Promise<IAnswer>;
   findById(answerId: string): Promise<IAnswer>;
   findAll(
-    pagination?: PaginationInput,
-    filter?: IFilter,
+    pagination?: Partial<PaginationInput>,
+    filter?: Partial<IFilter>,
   ): Promise<IListAllResponse>;
 }
