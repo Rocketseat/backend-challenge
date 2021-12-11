@@ -13,8 +13,6 @@ interface CorrectLessonMessage {
 }
 @Injectable()
 export class SendAnswerUseCase implements OnModuleInit {
-  private _kafkaProducer: Producer;
-
   constructor(
     private readonly answerRepository: AnswerRepository,
     private readonly challengeRepository: ChallengeRepository,
@@ -23,17 +21,12 @@ export class SendAnswerUseCase implements OnModuleInit {
     private readonly clientKafka: ClientKafka,
   ) {}
 
-  private async kafkaConnect() {
-    return this.clientKafka.connect();
-  }
-
-  private set kafkaProducer(producer: Producer) {
-    this._kafkaProducer = producer;
+  private async kafkaSubscribeToResponseOf(topic: string) {
+    this.clientKafka.subscribeToResponseOf(topic);
   }
 
   async onModuleInit() {
-    const kafkaConnection = await this.kafkaConnect();
-    this.kafkaProducer = kafkaConnection;
+    this.kafkaSubscribeToResponseOf('challenge.correction');
   }
 
   async execute(creatAnswerInput: any): Promise<IAnswer> {
@@ -80,18 +73,15 @@ export class SendAnswerUseCase implements OnModuleInit {
       throw new UseCaseError(errors, answer);
     }
 
-    this._kafkaProducer.send({
-      topic: 'challenge.correction',
-      messages: [
-        {
-          key: answer.id,
-          value: JSON.stringify({
-            submissionId: creatAnswerInput.challengeId,
-            repositoryUrl: creatAnswerInput.link,
-          } as CorrectLessonMessage),
-        },
-      ],
-    });
+    this.clientKafka
+      .send(
+        'challenge.correction',
+        JSON.stringify({
+          submissionId: answer.id,
+          repositoryUrl: creatAnswerInput.link,
+        } as CorrectLessonMessage),
+      )
+      .subscribe();
 
     return answer;
   }
