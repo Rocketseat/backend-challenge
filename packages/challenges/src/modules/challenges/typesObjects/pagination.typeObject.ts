@@ -1,8 +1,8 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { IPagination } from '../interfaces/IPagination.interface';
+import { Pagination } from 'src/core/domain/Pagination.interface';
 
 @ObjectType()
-export class Pagination implements IPagination {
+export class PaginationTypeObject implements Pagination {
   @Field(() => Int)
   page: number;
 

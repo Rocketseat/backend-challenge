@@ -1,5 +1,5 @@
+import { Pagination } from 'src/core/domain/Pagination.interface';
 import { PaginationInput } from 'src/modules/challenges/dto/pagination.input';
-import { IPagination } from 'src/modules/challenges/interfaces/IPagination.interface';
 import { Status } from '../enums/Status.enum';
 import { IAnswer } from '../interfaces/IAnswer.interface';
 
@@ -22,7 +22,7 @@ export interface IFilter {
 
 export interface IListAllResponse {
   answers: IAnswer[];
-  pagination: IPagination;
+  pagination: Pagination;
 }
 
 export interface IAnswerRepository {

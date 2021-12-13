@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Pagination } from 'src/core/domain/Pagination.interface';
 import { PaginationInput } from '../../dto/pagination.input';
 import { ChallengeRepository } from '../../repositories/prisma/Challenge.repository';
 
@@ -15,7 +16,7 @@ export class ListChallengesUseCase {
     const DEFAULT_PAGINATION = {
       page: 1,
       pageSize: 10,
-    } as PaginationInput;
+    } as Pagination;
 
     const challenges = await this.challengeRepository.listAll(
       {

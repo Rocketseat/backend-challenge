@@ -1,10 +1,10 @@
+import { Pagination } from 'src/core/domain/Pagination.interface';
 import { PaginationInput } from '../dto/pagination.input';
 import { IChallenge } from '../interfaces/IChallenge.interface';
-import { IPagination } from '../interfaces/IPagination.interface';
 
 interface IListAllResponse {
   challenges: IChallenge[];
-  pagination: IPagination;
+  pagination: Pagination;
 }
 export interface IChallengeRepository {
   create(challenge: Partial<IChallenge>): Promise<IChallenge>;

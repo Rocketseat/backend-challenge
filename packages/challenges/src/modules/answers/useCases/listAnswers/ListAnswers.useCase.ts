@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { Pagination } from 'src/core/domain/Pagination.interface';
 import { PaginationInput } from 'src/modules/challenges/dto/pagination.input';
-import { IPagination } from 'src/modules/challenges/interfaces/IPagination.interface';
 import {
   IFilter,
   IListAllResponse,
@@ -8,7 +8,7 @@ import {
 import { AnswerRepository } from '../../repositories/prisma/Answer.repository';
 
 interface IListAnswersInput {
-  pagination?: Partial<IPagination>;
+  pagination?: Partial<Pagination>;
   filter?: IFilter;
 }
 @Injectable()
