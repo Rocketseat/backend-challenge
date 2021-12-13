@@ -41,10 +41,8 @@ describe('Update Answer Use Case', () => {
     };
 
     await updateAnswerUseCase.execute({
-      value: {
-        ...expectedAnswerUpdatedValues,
-        submissionId: answer.id,
-      },
+      ...expectedAnswerUpdatedValues,
+      submissionId: answer.id,
     });
 
     const updatedAnswer = await answerRepository.findById(answer.id);

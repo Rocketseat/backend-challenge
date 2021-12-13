@@ -27,6 +27,7 @@ export class SendAnswerUseCase implements OnModuleInit {
 
   async onModuleInit() {
     this.kafkaSubscribeToResponseOf('challenge.correction');
+    await this.clientKafka.connect();
   }
 
   async execute(creatAnswerInput: any): Promise<IAnswer> {

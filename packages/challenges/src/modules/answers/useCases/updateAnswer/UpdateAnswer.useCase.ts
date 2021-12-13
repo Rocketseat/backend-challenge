@@ -1,5 +1,4 @@
-import { Controller } from '@nestjs/common';
-import { MessagePattern, Payload } from '@nestjs/microservices';
+import { Injectable } from '@nestjs/common';
 import { Status } from '../../enums/Status.enum';
 import { AnswerRepository } from '../../repositories/prisma/Answer.repository';
 
@@ -9,19 +8,14 @@ interface IUpdateAnswerInput {
   status: Status;
 }
 
-interface IKafkaMessage {
-  value: IUpdateAnswerInput;
-}
-
-@Controller()
+@Injectable()
 export class UpdateAnswerUseCase {
   constructor(private readonly answerRepository: AnswerRepository) {}
 
-  @MessagePattern('challenge.correction.reply')
-  async execute(@Payload() { value }: IKafkaMessage) {
-    await this.answerRepository.updateById(value.submissionId, {
-      grade: value.grade,
-      status: value.status,
+  async execute(updateAnswerInput: IUpdateAnswerInput) {
+    await this.answerRepository.updateById(updateAnswerInput.submissionId, {
+      grade: updateAnswerInput.grade,
+      status: updateAnswerInput.status,
     });
   }
 }
