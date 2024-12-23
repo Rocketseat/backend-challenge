@@ -2,12 +2,31 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Answer {
+  challenge: Challenge!
+  createdAt: DateTime!
+  id: String!
+  repositoryUrl: String!
+  score: Float!
+  status: AnswerStatus!
+}
+
+"""
+Status of an answer, comprising the values "Pending", "Error" and "Done".
+"""
+scalar AnswerStatus
+
 type Challenge {
   createdAt: DateTime!
   description: String!
   id: String!
   title: String!
   updatedAt: DateTime!
+}
+
+input CreateAnswerInput {
+  challengeId: String!
+  repositoryUrl: String!
 }
 
 input CreateChallengeInput {
@@ -21,14 +40,26 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type Mutation {
+  createAnswer(createAnswerInput: CreateAnswerInput!): Answer!
   createChallenge(createChallengeInput: CreateChallengeInput!): Challenge!
+  removeAnswer(id: String!): Answer!
   removeChallenge(id: String!): Challenge!
+  updateAnswer(updateAnswerInput: UpdateAnswerInput!): Answer!
   updateChallenge(updateChallengeInput: UpdateChallengeInput!): Challenge!
 }
 
 type Query {
+  answer(id: String!): Answer!
   challenge(id: String!): Challenge!
   challenges(description: String, limit: Float, page: Float, title: String): [Challenge!]!
+}
+
+input UpdateAnswerInput {
+  challengeId: String
+  id: String!
+  repositoryUrl: String
+  score: Float!
+  status: AnswerStatus!
 }
 
 input UpdateChallengeInput {

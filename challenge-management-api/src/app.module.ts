@@ -6,6 +6,8 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
 import { PrismaModule } from './prisma/prisma.module';
+import { AnswerStatusScalarType } from './utils/custom-scalar-types';
+import { AnswerModule } from './answer/answer.module';
 
 @Module({
   imports: [
@@ -13,9 +15,13 @@ import { PrismaModule } from './prisma/prisma.module';
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
+      resolvers: {
+        AnswerStatus: AnswerStatusScalarType,
+      },
     }),
     ChallengeModule,
     PrismaModule,
+    AnswerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
