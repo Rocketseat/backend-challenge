@@ -14,11 +14,11 @@ export class ListAnswersArgs {
   challengeId?: string;
 
   @Field({ nullable: true })
-  status?: AnswerStatus;
+  startDate?: Date;
 
   @Field({ nullable: true })
-  startDate: Date;
+  endDate?: Date;
 
   @Field(() => AnswerStatusScalarType, { nullable: true })
-  endDate: Date;
+  status?: AnswerStatus;
 }

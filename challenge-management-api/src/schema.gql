@@ -14,7 +14,7 @@ type Answer {
 }
 
 """
-Status of an answer, comprising the values "PENDING", "PENDING" and "PENDING".
+Status of an answer, comprising the values "Pending", "Error" and "Done".
 """
 scalar AnswerStatus
 
@@ -49,7 +49,7 @@ type Mutation {
 }
 
 type Query {
-  answers(challengeId: String, endDate: AnswerStatus, limit: Float, page: Float, startDate: DateTime, status: String): [Answer!]!
+  answers(challengeId: String, endDate: DateTime, limit: Float, page: Float, startDate: DateTime, status: AnswerStatus): [Answer!]!
   challenge(id: String!): Challenge!
   challenges(description: String, limit: Float, page: Float, title: String): [Challenge!]!
 }

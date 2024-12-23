@@ -9,17 +9,19 @@ enum AnswerStatus {
 export const AnswerStatusScalarType = new GraphQLScalarType({
   name: 'AnswerStatus',
   description:
-    'Status of an answer, comprising the values "PENDING", "PENDING" and "PENDING".',
+    'Status of an answer, comprising the values "Pending", "Error" and "Done".',
   serialize(value: AnswerStatus): string {
     return AnswerStatus[value];
   },
   parseValue(value: string): AnswerStatus {
-    if (!(value in AnswerStatus)) {
+    if (!Object.values(AnswerStatus).includes(value as AnswerStatus)) {
       throw new Error(
-        `Error parsing Answer Status. Values allowed are ${Object.keys(AnswerStatus).join(', ')}`,
+        `Error parsing Answer Status. Values allowed are ${Object.values(AnswerStatus).join(', ')}`,
       );
     }
 
-    return AnswerStatus[value];
+    return Object.entries(AnswerStatus).find(
+      ([, val]) => val === value,
+    )?.[0] as AnswerStatus;
   },
 });
