@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { CreateChallengeInput } from './dto/create-challenge.input';
 import { UpdateChallengeInput } from './dto/update-challenge.input';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { ListChallengesArgs } from './dto/list-challenges.args';
-import { parsePartialFilters } from 'src/utils/parse-filters';
+import { parseFilters } from '../utils/parse-filters';
 
 @Injectable()
 export class ChallengeService {
@@ -22,14 +22,25 @@ export class ChallengeService {
     const queryArgs = {
       skip,
       take,
-      where: parsePartialFilters({ title, description }),
+      where: parseFilters([
+        {
+          field: 'title',
+          operator: 'contains',
+          value: title,
+        },
+        {
+          field: 'description',
+          operator: 'contains',
+          value: description,
+        },
+      ]),
     };
 
     return this.prisma.challenge.findMany(queryArgs);
   }
 
   findOne(id: string) {
-    return this.prisma.challenge.findFirst({
+    return this.prisma.challenge.findUniqueOrThrow({
       where: { id },
     });
   }

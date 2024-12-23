@@ -1,12 +1,15 @@
 import { ObjectType, Field, Float } from '@nestjs/graphql';
 import { AnswerStatus } from '@prisma/client';
-import { Challenge } from 'src/challenge/entities/challenge.entity';
-import { AnswerStatusScalarType } from 'src/utils/custom-scalar-types';
+import { Challenge } from '../../challenge/entities/challenge.entity';
+import { AnswerStatusScalarType } from '../../utils/custom-scalar-types';
 
 @ObjectType()
 export class Answer {
   @Field(() => String)
   id: string;
+
+  @Field(() => String)
+  challengeId: string;
 
   @Field(() => Challenge)
   challenge: Challenge;
@@ -22,4 +25,7 @@ export class Answer {
 
   @Field(() => AnswerStatusScalarType)
   status: AnswerStatus;
+
+  @Field(() => String)
+  errorMessage: string;
 }

@@ -24,12 +24,13 @@ model Challenge {
 
 model Answer {
   id            String       @id @default(uuid())
-  challengeId   String       @map("challenge_id")
-  challenge     Challenge    @relation(fields: [challengeId], references: [id])
+  challengeId   String?      @map("challenge_id")
+  challenge     Challenge?   @relation(fields: [challengeId], references: [id])
   repositoryUrl String       @map("repository_url")
   createdAt     DateTime     @default(now()) @map("created_at")
   status        AnswerStatus
   score         Float?
+  errorMessage  String?      @map("error_message")
 }
 
 enum AnswerStatus {

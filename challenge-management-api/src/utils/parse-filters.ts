@@ -1,15 +1,31 @@
-export const parsePartialFilters = (filters: Record<string, string>) => {
+interface Filter {
+  field: string;
+  value: string | number | Date;
+  operator: 'equals' | 'gt' | 'gte' | 'lte' | 'lt' | 'contains';
+}
+
+export const parseFilters = (filters: Filter[]) => {
   let parsedResult = {};
-  for (const [field, value] of Object.entries(filters)) {
+  for (const { field, operator, value } of filters) {
     if (field && value) {
+      if (operator === 'contains') {
+        parsedResult = {
+          ...parsedResult,
+          [field]: {
+            contains: `${value}`,
+            mode: 'insensitive',
+          },
+        };
+        continue;
+      }
       parsedResult = {
         ...parsedResult,
         [field]: {
-          contains: value,
-          mode: 'insensitive',
+          [operator]: value,
         },
       };
     }
   }
+
   return parsedResult;
 };

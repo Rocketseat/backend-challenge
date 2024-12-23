@@ -4,7 +4,9 @@
 
 type Answer {
   challenge: Challenge!
+  challengeId: String!
   createdAt: DateTime!
+  errorMessage: String!
   id: String!
   repositoryUrl: String!
   score: Float!
@@ -12,7 +14,7 @@ type Answer {
 }
 
 """
-Status of an answer, comprising the values "Pending", "Error" and "Done".
+Status of an answer, comprising the values "PENDING", "PENDING" and "PENDING".
 """
 scalar AnswerStatus
 
@@ -42,24 +44,14 @@ scalar DateTime
 type Mutation {
   createAnswer(createAnswerInput: CreateAnswerInput!): Answer!
   createChallenge(createChallengeInput: CreateChallengeInput!): Challenge!
-  removeAnswer(id: String!): Answer!
   removeChallenge(id: String!): Challenge!
-  updateAnswer(updateAnswerInput: UpdateAnswerInput!): Answer!
   updateChallenge(updateChallengeInput: UpdateChallengeInput!): Challenge!
 }
 
 type Query {
-  answer(id: String!): Answer!
+  answers(challengeId: String, endDate: AnswerStatus, limit: Float, page: Float, startDate: DateTime, status: String): [Answer!]!
   challenge(id: String!): Challenge!
   challenges(description: String, limit: Float, page: Float, title: String): [Challenge!]!
-}
-
-input UpdateAnswerInput {
-  challengeId: String
-  id: String!
-  repositoryUrl: String
-  score: Float!
-  status: AnswerStatus!
 }
 
 input UpdateChallengeInput {
