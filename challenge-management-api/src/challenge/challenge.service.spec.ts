@@ -1,16 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ChallengeService } from './challenge.service';
-import { PrismaService } from '../prisma/prisma.service';
-
-const prismaMock = {
-  challenge: {
-    create: jest.fn(),
-    findFirst: jest.fn(),
-    findMany: jest.fn(),
-    update: jest.fn(),
-    delete: jest.fn(),
-  },
-};
+import { ChallengeFakeRepository } from './repositories/implementations/challenge.fake.repository';
 
 describe('ChallengeService', () => {
   let service: ChallengeService;
@@ -20,8 +10,8 @@ describe('ChallengeService', () => {
       providers: [
         ChallengeService,
         {
-          provide: PrismaService,
-          useValue: prismaMock,
+          provide: 'ChallengeRepository',
+          useClass: ChallengeFakeRepository,
         },
       ],
     }).compile();
@@ -39,6 +29,7 @@ describe('ChallengeService', () => {
       description: 'Challenge Description',
     };
     const challenge = await service.create(challengeInput);
-    console.log(challenge);
+    expect(challenge).toMatchObject(challengeInput);
+    expect(challenge.id).toBeDefined();
   });
 });
