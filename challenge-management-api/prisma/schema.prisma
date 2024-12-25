@@ -20,6 +20,7 @@ model Challenge {
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
   Answer      Answer[]
+  @@map("challenges")
 }
 
 model Answer {
@@ -31,6 +32,7 @@ model Answer {
   status        AnswerStatus
   score         Float?
   errorMessage  String?      @map("error_message")
+  @@map("answers")
 }
 
 enum AnswerStatus {

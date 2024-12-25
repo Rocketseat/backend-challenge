@@ -9,10 +9,10 @@ export class Answer {
   id: string;
 
   @Field(() => String)
-  challengeId: string;
+  challengeId?: string;
 
   @Field(() => Challenge)
-  challenge: Challenge;
+  challenge?: Challenge;
 
   @Field(() => String)
   repositoryUrl: string;
@@ -21,11 +21,11 @@ export class Answer {
   createdAt: Date;
 
   @Field(() => Float)
-  score: number;
+  score?: number;
 
   @Field(() => AnswerStatusScalarType)
   status: AnswerStatus;
 
   @Field(() => String)
-  errorMessage: string;
+  errorMessage?: string;
 }

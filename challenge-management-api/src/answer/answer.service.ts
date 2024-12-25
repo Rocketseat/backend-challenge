@@ -1,14 +1,20 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateAnswerInput } from './dto/create-answer.input';
 import { UpdateAnswerInput } from './dto/update-answer.input';
-import { PrismaService } from '../prisma/prisma.service';
 import { AnswerStatus } from '@prisma/client';
 import { ListAnswersArgs } from './dto/list-answers.args';
-import { parseFilters } from '../utils/parse-filters';
+import { AnswerRepository } from './repositories/answer.repository';
+import { ChallengeRepository } from 'src/challenge/repositories/challenge.repository';
 
 @Injectable()
 export class AnswerService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    @Inject('AnswerRepository')
+    private readonly answerRepository: AnswerRepository,
+
+    @Inject('ChallengeRepository')
+    private readonly challengeRepository: ChallengeRepository,
+  ) {}
   async create(createAnswerInput: CreateAnswerInput) {
     const { challengeId, repositoryUrl } = createAnswerInput;
     let status: AnswerStatus = AnswerStatus.PENDING;
@@ -21,71 +27,44 @@ export class AnswerService {
       status = AnswerStatus.ERROR;
     }
 
-    const challenge = await this.prisma.challenge.findUnique({
-      where: { id: challengeId },
-    });
+    const challenge = await this.challengeRepository.findOne(challengeId);
 
     if (!challenge) {
       status = AnswerStatus.ERROR;
     }
 
-    return this.prisma.answer.create({
-      data: {
+    return this.answerRepository.create({
         status,
         repositoryUrl,
         challengeId: challenge ? challengeId : null,
-      },
-    });
+      });
   }
 
   findAll(args: ListAnswersArgs) {
     const defaultPageSize = 15;
-    const { page, limit, challengeId, status, startDate, endDate } = args;
-    const take = limit ?? defaultPageSize;
-    const skip = page ? (page - 1) * take : 0;
-    const queryArgs = {
-      skip,
-      take,
-      where: parseFilters([
-        {
-          field: 'challengeId',
-          operator: 'equals',
-          value: challengeId,
-        },
-        {
-          field: 'status',
-          operator: 'equals',
-          value: status,
-        },
-        {
-          field: 'createdAt',
-          operator: 'gte',
-          value: startDate,
-        },
-        {
-          field: 'createdAt',
-          operator: 'lte',
-          value: endDate,
-        },
-      ]),
-    };
+    let { page, limit, challengeId, status, startDate, endDate } = args;
+    limit = limit ?? defaultPageSize;
+    page = page ? (page - 1) * limit : 0;
 
-    return this.prisma.answer.findMany(queryArgs);
-  }
-
-  findOne(id: string) {
-    return this.prisma.answer.findUniqueOrThrow({ where: { id } });
-  }
-
-  update(updateAnswerInput: UpdateAnswerInput) {
-    const { id, ...data } = updateAnswerInput;
-    return this.prisma.answer.update({
-      where: { id },
-      data,
+    return this.answerRepository.findMany({
+      page,
+      limit,
+      challengeId,
+      status,
+      startDate,
+      endDate
     });
   }
 
+  findOne(id: string) {
+    return this.answerRepository.findOne(id);
+  }
+
+  update(updateAnswerInput: UpdateAnswerInput) {
+    return this.answerRepository.update(updateAnswerInput);
+  }
+
   remove(id: string) {
-    return this.prisma.answer.delete({ where: { id } });
+    return this.answerRepository.delete(id);
   }
 }
