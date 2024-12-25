@@ -1,27 +1,55 @@
-import { parseFilters } from './parse-filters';
+import { FilterInput, parseFilters } from './parse-filters';
 
 describe('ChallengeService', () => {
   it('should parse filters case insensitive', () => {
-    const filtersInput = {
-      title: 'TeS',
-      description: 'chaL',
-    };
+    const filtersInput: FilterInput[] = [
+      {
+          field: 'title',
+          operator: 'contains',
+          value: 'abc',
+      },
+      {
+          field: 'description',
+          operator: 'contains',
+          value: 'ab cd',
+      },
+  ];
     const result = parseFilters(filtersInput);
     expect(result).toMatchObject({
-      title: { contains: 'TeS', mode: 'insensitive' },
-      description: { contains: 'chaL', mode: 'insensitive' },
+      title: { contains: 'abc', mode: 'insensitive' },
+      description: { contains: 'ab cd', mode: 'insensitive' },
     });
   });
 
-  it('should convert numeric input to text before returning', () => {
-    const filtersInput = {
-      age: 90,
-      height: 1.9,
-    };
+  it('should parse filters with other operators', () => {
+    const filtersInput: FilterInput[] = [
+      {
+          field: 'parentId',
+          operator: 'equals',
+          value: 1,
+      },
+      {
+          field: 'status',
+          operator: 'equals',
+          value: 'done',
+      },
+      {
+          field: 'createdAt',
+          operator: 'gte',
+          value: '2024-12-01',
+      },
+      {
+          field: 'createdAt',
+          operator: 'lte',
+          value: '2025-01-01',
+      },
+    ];
+
     const result = parseFilters(filtersInput);
     expect(result).toMatchObject({
-      age: { contains: '90', mode: 'insensitive' },
-      height: { contains: '1.9', mode: 'insensitive' },
-    });
-  });
+      parentId: { equals : 1 },
+      status: { equals: 'done' },
+      createdAt: { gte: '2024-12-01', lte: '2025-01-01' },
+    })
+  })
 });

@@ -18,6 +18,10 @@ export class ChallengePrismaRepository implements ChallengeRepository {
     async findOne(id: string): Promise<Challenge> {
         return this.prisma.challenge.findUnique({ where: { id }});
     }
+    
+    async findByTitle(title: string): Promise<Challenge | null> {
+        return this.prisma.challenge.findFirst({ where: { title }});
+    }
 
     async findMany(args: ListChallengesArgs): Promise<Challenge[]> {
         const { page, limit, title, description } = args;

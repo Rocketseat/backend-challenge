@@ -15,7 +15,7 @@ datasource db {
 
 model Challenge {
   id          String   @id @default(uuid())
-  title       String
+  title       String   @unique
   description String
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")

@@ -1,4 +1,4 @@
-interface FilterInput {
+export interface FilterInput {
   field: string;
   value: string | number | Date;
   operator: 'equals' | 'gt' | 'gte' | 'lte' | 'lt' | 'contains';
@@ -21,6 +21,7 @@ export const parseFilters = (filters: FilterInput[]) => {
       parsedResult = {
         ...parsedResult,
         [field]: {
+          ...parsedResult[field],
           [operator]: value,
         },
       };

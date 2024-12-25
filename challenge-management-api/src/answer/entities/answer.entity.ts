@@ -8,10 +8,10 @@ export class Answer {
   @Field(() => String)
   id: string;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   challengeId?: string;
 
-  @Field(() => Challenge)
+  @Field(() => Challenge, { nullable: true })
   challenge?: Challenge;
 
   @Field(() => String)
@@ -20,12 +20,12 @@ export class Answer {
   @Field(() => Date)
   createdAt: Date;
 
-  @Field(() => Float)
+  @Field(() => Float, { nullable: true })
   score?: number;
 
   @Field(() => AnswerStatusScalarType)
   status: AnswerStatus;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   errorMessage?: string;
 }

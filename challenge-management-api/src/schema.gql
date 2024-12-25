@@ -3,13 +3,13 @@
 # ------------------------------------------------------
 
 type Answer {
-  challenge: Challenge!
-  challengeId: String!
+  challenge: Challenge
+  challengeId: String
   createdAt: DateTime!
-  errorMessage: String!
+  errorMessage: String
   id: String!
   repositoryUrl: String!
-  score: Float!
+  score: Float
   status: AnswerStatus!
 }
 
@@ -44,7 +44,7 @@ scalar DateTime
 type Mutation {
   createAnswer(createAnswerInput: CreateAnswerInput!): Answer!
   createChallenge(createChallengeInput: CreateChallengeInput!): Challenge!
-  removeChallenge(id: String!): Challenge!
+  deleteChallenge(id: String!): Challenge!
   updateChallenge(updateChallengeInput: UpdateChallengeInput!): Challenge!
 }
 

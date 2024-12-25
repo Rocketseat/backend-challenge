@@ -34,7 +34,7 @@ export class ChallengeResolver {
   }
 
   @Mutation(() => Challenge)
-  removeChallenge(@Args('id', { type: () => String }) id: string) {
-    return this.challengeService.remove(id);
+  deleteChallenge(@Args('id', { type: () => String }) id: string) {
+    return this.challengeService.delete(id);
   }
 }

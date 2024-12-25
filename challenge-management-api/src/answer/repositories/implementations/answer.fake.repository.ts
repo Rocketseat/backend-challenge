@@ -5,7 +5,7 @@ import { ListAnswersArgs } from "src/answer/dto/list-answers.args";
 import { UpdateAnswerRepositoryInput } from "src/answer/dto/update-answer.repo.input";
 
 export class AnswerFakeRepository implements AnswerRepository {
-    private answers: Answer[];
+    public answers: Answer[] = [];
 
     async create(input: CreateAnswerRepositoryInput): Promise<Answer> {
         const answerData = {

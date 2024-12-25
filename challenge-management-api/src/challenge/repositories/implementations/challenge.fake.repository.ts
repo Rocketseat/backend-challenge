@@ -24,6 +24,10 @@ export class ChallengeFakeRepository implements ChallengeRepository {
         return this.challenges.find((challenge) => challenge.id === id);
     }
 
+    async findByTitle(title: string): Promise<Challenge> {
+        return this.challenges.find((challenge) => challenge.title === title);
+    }
+
     async findMany(args: ListChallengesArgs): Promise<Challenge[]> {
         return this.challenges;
     }

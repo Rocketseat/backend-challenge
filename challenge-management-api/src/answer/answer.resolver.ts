@@ -33,6 +33,6 @@ export class AnswerResolver {
 
   @ResolveField('challenge')
   challenge(@Parent() answer: Answer) {
-    return this.challengeService.findOne(answer.challengeId);
+    return answer.challengeId ? this.challengeService.findOne(answer.challengeId) : null;
   }
 }

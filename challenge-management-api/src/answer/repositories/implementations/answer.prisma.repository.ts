@@ -5,7 +5,9 @@ import { Answer } from "src/answer/entities/answer.entity";
 import { ListAnswersArgs } from "src/answer/dto/list-answers.args";
 import { parseFilters } from "src/utils/parse-filters";
 import { UpdateAnswerRepositoryInput } from "src/answer/dto/update-answer.repo.input";
+import { Injectable } from "@nestjs/common";
 
+@Injectable()
 export class AnswerPrismaRepository implements AnswerRepository {
     constructor(private readonly prisma: PrismaService) {}
 

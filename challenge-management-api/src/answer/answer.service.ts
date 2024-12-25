@@ -5,6 +5,8 @@ import { AnswerStatus } from '@prisma/client';
 import { ListAnswersArgs } from './dto/list-answers.args';
 import { AnswerRepository } from './repositories/answer.repository';
 import { ChallengeRepository } from 'src/challenge/repositories/challenge.repository';
+import { validateGitUrl } from '../utils/validate-git-url';
+import { Challenge } from '../challenge/entities/challenge.entity';
 
 @Injectable()
 export class AnswerService {
@@ -18,25 +20,27 @@ export class AnswerService {
   async create(createAnswerInput: CreateAnswerInput) {
     const { challengeId, repositoryUrl } = createAnswerInput;
     let status: AnswerStatus = AnswerStatus.PENDING;
+    let errorMessage = null;
+    let challenge: Challenge = null;
 
-    const repoResponse = await fetch(repositoryUrl, {
-      method: 'HEAD',
-    });
+    const repositoryUrlValidation = await validateGitUrl(repositoryUrl);
+    if (!repositoryUrlValidation.valid) {
+      status = AnswerStatus.ERROR,
+      errorMessage = repositoryUrlValidation.message
+    } else {
+      challenge = await this.challengeRepository.findOne(challengeId);
 
-    if (!repoResponse.ok) {
-      status = AnswerStatus.ERROR;
-    }
-
-    const challenge = await this.challengeRepository.findOne(challengeId);
-
-    if (!challenge) {
-      status = AnswerStatus.ERROR;
+      if (!challenge) {
+        status = AnswerStatus.ERROR;
+        errorMessage = 'Invalid challenge';
+      }
     }
 
     return this.answerRepository.create({
         status,
         repositoryUrl,
         challengeId: challenge ? challengeId : null,
+        errorMessage,
       });
   }
 
@@ -64,7 +68,7 @@ export class AnswerService {
     return this.answerRepository.update(updateAnswerInput);
   }
 
-  remove(id: string) {
+  delete(id: string) {
     return this.answerRepository.delete(id);
   }
 }
