@@ -6,7 +6,7 @@ import { ListAnswersArgs } from './dto/list-answers.args';
 import { AnswerRepository } from './repositories/answer.repository';
 import { ChallengeRepository } from 'src/challenge/repositories/challenge.repository';
 import { validateGitUrl } from '../utils/validate-git-url';
-import { Challenge } from '../challenge/entities/challenge.entity';
+import { KafkaJS } from '@confluentinc/kafka-javascript';
 
 @Injectable()
 export class AnswerService {
@@ -16,6 +16,9 @@ export class AnswerService {
 
     @Inject('ChallengeRepository')
     private readonly challengeRepository: ChallengeRepository,
+
+    @Inject('KAFKA_PRODUCER')
+    private kafkaProducer: KafkaJS.Producer,
   ) {}
   async create(createAnswerInput: CreateAnswerInput) {
     const { challengeId, repositoryUrl } = createAnswerInput;
@@ -35,12 +38,27 @@ export class AnswerService {
       errorMessage = 'Invalid challenge';
     }
 
-    return this.answerRepository.create({
+    const answer = await this.answerRepository.create({
       status,
       repositoryUrl,
       challengeId: challenge ? challengeId : null,
       errorMessage,
     });
+
+    if (answer.status === AnswerStatus.PENDING) {
+      await this.kafkaProducer.send({
+        topic: 'challenge.correction',
+        messages: [
+          {
+            value: JSON.stringify({
+              submissionId: answer.id,
+              repositoryUrl,
+            }),
+          },
+        ],
+      });
+    }
+    return answer;
   }
 
   findMany(args: ListAnswersArgs) {

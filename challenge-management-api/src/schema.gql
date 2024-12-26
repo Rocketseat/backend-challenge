@@ -42,7 +42,7 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type Mutation {
-  createAnswer(createAnswerInput: CreateAnswerInput!): Answer!
+  answerChallenge(createAnswerInput: CreateAnswerInput!): Answer!
   createChallenge(createChallengeInput: CreateChallengeInput!): Challenge!
   deleteChallenge(id: String!): Challenge!
   updateChallenge(updateChallengeInput: UpdateChallengeInput!): Challenge!

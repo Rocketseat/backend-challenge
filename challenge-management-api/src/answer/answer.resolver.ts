@@ -20,7 +20,7 @@ export class AnswerResolver {
   ) {}
 
   @Mutation(() => Answer)
-  createAnswer(
+  answerChallenge(
     @Args('createAnswerInput') createAnswerInput: CreateAnswerInput,
   ) {
     return this.answerService.create(createAnswerInput);

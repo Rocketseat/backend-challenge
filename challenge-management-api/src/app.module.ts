@@ -8,6 +8,7 @@ import { join } from 'path';
 import { PrismaModule } from './prisma/prisma.module';
 import { AnswerStatusScalarType } from './utils/custom-scalar-types';
 import { AnswerModule } from './answer/answer.module';
+import { KafkaModule } from './kafka/kafka.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { AnswerModule } from './answer/answer.module';
     ChallengeModule,
     PrismaModule,
     AnswerModule,
+    KafkaModule,
   ],
   controllers: [AppController],
   providers: [AppService],
