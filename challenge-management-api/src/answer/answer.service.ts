@@ -21,19 +21,18 @@ export class AnswerService {
     const { challengeId, repositoryUrl } = createAnswerInput;
     let status: AnswerStatus = AnswerStatus.PENDING;
     let errorMessage = null;
-    let challenge: Challenge = null;
 
     const repositoryUrlValidation = await validateGitUrl(repositoryUrl);
     if (!repositoryUrlValidation.valid) {
       status = AnswerStatus.ERROR;
       errorMessage = repositoryUrlValidation.message;
-    } else {
-      challenge = await this.challengeRepository.findOne(challengeId);
+    }
 
-      if (!challenge) {
-        status = AnswerStatus.ERROR;
-        errorMessage = 'Invalid challenge';
-      }
+    const challenge = await this.challengeRepository.findOne(challengeId);
+
+    if (!challenge) {
+      status = AnswerStatus.ERROR;
+      errorMessage = 'Invalid challenge';
     }
 
     return this.answerRepository.create({

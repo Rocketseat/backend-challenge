@@ -153,7 +153,6 @@ describe('ChallengeService', () => {
     });
 
     const updatedChallenge = await challengeRepository.findOne(challenge.id);
-    console.log(updatedChallenge);
     expect(updatedChallenge).toMatchObject({
       title: 'Updated Challenge',
       description: 'Updated description',
