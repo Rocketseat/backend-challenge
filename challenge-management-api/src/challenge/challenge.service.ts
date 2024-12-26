@@ -1,4 +1,9 @@
-import { BadRequestException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateChallengeInput } from './dto/create-challenge.input';
 import { UpdateChallengeInput } from './dto/update-challenge.input';
 import { ListChallengesArgs } from './dto/list-challenges.args';
@@ -8,27 +13,31 @@ import { ChallengeRepository } from './repositories/challenge.repository';
 export class ChallengeService {
   constructor(
     @Inject('ChallengeRepository')
-    private readonly challengeRepository: ChallengeRepository
+    private readonly challengeRepository: ChallengeRepository,
   ) {}
   async create(createChallengeInput: CreateChallengeInput) {
-    const existingChallenge = await this.challengeRepository.findByTitle(createChallengeInput.title);
+    const existingChallenge = await this.challengeRepository.findByTitle(
+      createChallengeInput.title,
+    );
     if (existingChallenge) {
-      throw new BadRequestException(`challenge with title ${createChallengeInput.title} already exists!`);
+      throw new BadRequestException(
+        `challenge with title ${createChallengeInput.title} already exists!`,
+      );
     }
     return this.challengeRepository.create(createChallengeInput);
   }
 
-  async findAll(args: ListChallengesArgs) {
-    let { page, limit, title, description } = args;
+  async findMany(args: ListChallengesArgs) {
     const defaultPageSize = 15;
-    limit = limit ?? defaultPageSize;
-    page = page ? (page - 1) * limit : 0;
+    const { page, limit, ...data } = args;
+    const take = limit ?? defaultPageSize;
+    const skip = page ? (page - 1) * take : 0;
     const queryArgs = {
-      page,
-      limit,
-      title,
-      description,
+      take,
+      skip,
+      ...data,
     };
+
     return this.challengeRepository.findMany(queryArgs);
   }
 
@@ -37,9 +46,19 @@ export class ChallengeService {
   }
 
   async update(updateChallengeInput: UpdateChallengeInput) {
-    const existingChallenge = await this.challengeRepository.findByTitle(updateChallengeInput.title);
-    if (existingChallenge) {
-      throw new BadRequestException(`challenge with title ${updateChallengeInput.title} already exists!`);
+    const challengeExists = await this.challengeRepository.findOne(
+      updateChallengeInput.id,
+    );
+    if (!challengeExists) {
+      throw new NotFoundException();
+    }
+
+    const existingChallengeWithTitle =
+      await this.challengeRepository.findByTitle(updateChallengeInput.title);
+    if (existingChallengeWithTitle) {
+      throw new BadRequestException(
+        `challenge with title ${updateChallengeInput.title} already exists!`,
+      );
     }
     return this.challengeRepository.update(updateChallengeInput);
   }

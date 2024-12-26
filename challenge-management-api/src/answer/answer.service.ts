@@ -25,8 +25,8 @@ export class AnswerService {
 
     const repositoryUrlValidation = await validateGitUrl(repositoryUrl);
     if (!repositoryUrlValidation.valid) {
-      status = AnswerStatus.ERROR,
-      errorMessage = repositoryUrlValidation.message
+      status = AnswerStatus.ERROR;
+      errorMessage = repositoryUrlValidation.message;
     } else {
       challenge = await this.challengeRepository.findOne(challengeId);
 
@@ -37,26 +37,23 @@ export class AnswerService {
     }
 
     return this.answerRepository.create({
-        status,
-        repositoryUrl,
-        challengeId: challenge ? challengeId : null,
-        errorMessage,
-      });
+      status,
+      repositoryUrl,
+      challengeId: challenge ? challengeId : null,
+      errorMessage,
+    });
   }
 
-  findAll(args: ListAnswersArgs) {
+  findMany(args: ListAnswersArgs) {
     const defaultPageSize = 15;
-    let { page, limit, challengeId, status, startDate, endDate } = args;
-    limit = limit ?? defaultPageSize;
-    page = page ? (page - 1) * limit : 0;
+    const { page, limit, ...data } = args;
+    const take = limit ?? defaultPageSize;
+    const skip = page ? (page - 1) * take : 0;
 
     return this.answerRepository.findMany({
-      page,
-      limit,
-      challengeId,
-      status,
-      startDate,
-      endDate
+      skip,
+      take,
+      ...data,
     });
   }
 

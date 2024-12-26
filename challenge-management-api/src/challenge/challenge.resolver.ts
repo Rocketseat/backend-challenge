@@ -18,7 +18,7 @@ export class ChallengeResolver {
 
   @Query(() => [Challenge], { name: 'challenges' })
   findAll(@Args() args: ListChallengesArgs) {
-    return this.challengeService.findAll(args);
+    return this.challengeService.findMany(args);
   }
 
   @Query(() => Challenge, { name: 'challenge' })

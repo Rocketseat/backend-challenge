@@ -8,10 +8,10 @@ import { ChallengePrismaRepository } from 'src/challenge/repositories/implementa
 @Module({
   providers: [
     AnswerResolver,
-    AnswerService, 
+    AnswerService,
     ChallengeService,
     { provide: 'AnswerRepository', useClass: AnswerPrismaRepository },
-    { provide: 'ChallengeRepository', useClass: ChallengePrismaRepository }
+    { provide: 'ChallengeRepository', useClass: ChallengePrismaRepository },
   ],
 })
 export class AnswerModule {}

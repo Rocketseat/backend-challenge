@@ -28,11 +28,13 @@ export class AnswerResolver {
 
   @Query(() => [Answer], { name: 'answers' })
   findAll(@Args() args: ListAnswersArgs) {
-    return this.answerService.findAll(args);
+    return this.answerService.findMany(args);
   }
 
   @ResolveField('challenge')
   challenge(@Parent() answer: Answer) {
-    return answer.challengeId ? this.challengeService.findOne(answer.challengeId) : null;
+    return answer.challengeId
+      ? this.challengeService.findOne(answer.challengeId)
+      : null;
   }
 }

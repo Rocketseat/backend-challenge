@@ -6,10 +6,10 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Module({
   providers: [
-    ChallengeResolver, 
+    ChallengeResolver,
     ChallengeService,
     PrismaService,
-    { provide: 'ChallengeRepository', useClass: ChallengePrismaRepository }
+    { provide: 'ChallengeRepository', useClass: ChallengePrismaRepository },
   ],
 })
 export class ChallengeModule {}

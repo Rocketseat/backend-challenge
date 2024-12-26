@@ -1,8 +1,8 @@
-import { AnswerStatus } from "@prisma/client";
+import { AnswerStatus } from '@prisma/client';
 
 export interface CreateAnswerRepositoryInput {
-    status: AnswerStatus;
-    repositoryUrl: string;
-    challengeId?: string;
-    errorMessage?: string;
+  status: AnswerStatus;
+  repositoryUrl: string;
+  challengeId?: string;
+  errorMessage?: string;
 }

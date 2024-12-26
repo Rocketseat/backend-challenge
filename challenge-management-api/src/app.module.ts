@@ -22,7 +22,6 @@ import { AnswerModule } from './answer/answer.module';
     ChallengeModule,
     PrismaModule,
     AnswerModule,
-    
   ],
   controllers: [AppController],
   providers: [AppService],
