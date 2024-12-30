@@ -1,7 +1,13 @@
 import { Controller, Logger } from '@nestjs/common';
 import { AnswerService } from './answer.service';
-import { KafkaContext } from 'src/kafka/kafka-context';
 import { MessagePattern, Payload } from '@nestjs/microservices';
+
+interface CorrectLessonResponse {
+  submissionId: string;
+  repositoryUrl: string;
+  grade: number;
+  status: 'Done' | 'Error' | 'Pending';
+}
 
 @Controller()
 export class AnswerConsumer {
@@ -10,8 +16,8 @@ export class AnswerConsumer {
   constructor(private readonly answerService: AnswerService) {}
 
   @MessagePattern('challenge.corrected')
-  async challengeCorrected(@Payload() payload: KafkaContext) {
-    this.logger.log(`Received message from topic: ${payload.topic}`);
+  async challengeCorrected(@Payload() payload: CorrectLessonResponse) {
+    this.logger.log(`Received message from topic`);
     console.log(payload);
   }
 }

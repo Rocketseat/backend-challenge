@@ -6,7 +6,8 @@ import { ListAnswersArgs } from './dto/list-answers.args';
 import { AnswerRepository } from './repositories/answer.repository';
 import { ChallengeRepository } from 'src/challenge/repositories/challenge.repository';
 import { validateGitUrl } from '../utils/validate-git-url';
-import { KafkaJS } from '@confluentinc/kafka-javascript';
+import { ClientKafka } from '@nestjs/microservices';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class AnswerService {
@@ -18,7 +19,7 @@ export class AnswerService {
     private readonly challengeRepository: ChallengeRepository,
 
     @Inject('KAFKA_PRODUCER')
-    private kafkaProducer: KafkaJS.Producer,
+    private producer: ClientKafka,
   ) {}
   async create(createAnswerInput: CreateAnswerInput) {
     const { challengeId, repositoryUrl } = createAnswerInput;
@@ -46,17 +47,7 @@ export class AnswerService {
     });
 
     if (answer.status === AnswerStatus.PENDING) {
-      await this.kafkaProducer.send({
-        topic: 'challenge.correction',
-        messages: [
-          {
-            value: JSON.stringify({
-              submissionId: answer.id,
-              repositoryUrl,
-            }),
-          },
-        ],
-      });
+      this.sendChallengeToTopic(answer.id, repositoryUrl);
     }
     return answer;
   }
@@ -84,5 +75,19 @@ export class AnswerService {
 
   delete(id: string) {
     return this.answerRepository.delete(id);
+  }
+
+  sendChallengeToTopic(submissionId: string, repositoryUrl: string): void {
+    // rxjs 7+ fez o "toPromise" ficar deprecated, substituindo por este
+    // subscriber. Criei este método para facilitar o mock
+    firstValueFrom(
+      this.producer.send(
+        'challenge.correction',
+        JSON.stringify({
+          submissionId,
+          repositoryUrl,
+        }),
+      ),
+    );
   }
 }

@@ -6,7 +6,6 @@ import { join } from 'path';
 import { PrismaModule } from './prisma/prisma.module';
 import { AnswerStatusScalarType } from './utils/custom-scalar-types';
 import { AnswerModule } from './answer/answer.module';
-import { KafkaModule } from './kafka/kafka.module';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
@@ -25,7 +24,6 @@ import { ConfigModule } from '@nestjs/config';
     ChallengeModule,
     PrismaModule,
     AnswerModule,
-    KafkaModule,
   ],
 })
 export class AppModule {}

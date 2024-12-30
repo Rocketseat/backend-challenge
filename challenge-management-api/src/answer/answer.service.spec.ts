@@ -17,10 +17,20 @@ describe('AnswerService', () => {
         AnswerService,
         { provide: 'AnswerRepository', useValue: answerRepository },
         { provide: 'ChallengeRepository', useValue: challengeRepository },
+        {
+          provide: 'KAFKA_PRODUCER',
+          useValue: {
+            send: jest.fn(),
+            subscribe: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
     service = module.get<AnswerService>(AnswerService);
+    jest
+      .spyOn(service, 'sendChallengeToTopic')
+      .mockImplementationOnce(() => jest.fn());
   });
 
   it('should be able to create an answer to an existing challenge', async () => {
@@ -35,6 +45,7 @@ describe('AnswerService', () => {
         }),
       ) as jest.Mock,
     );
+
     const repositoryUrl = 'https://github.com/example/example.git';
     const answer = await service.create({
       challengeId: challenge.id,
@@ -80,7 +91,6 @@ describe('AnswerService', () => {
         }),
       ) as jest.Mock,
     );
-
     const repositoryUrl =
       'https://github.com/ivandersr/repo-i-will-never-have34321';
     const answer = await service.create({
