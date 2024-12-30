@@ -1,5 +1,5 @@
-import { Controller } from '@nestjs/common';
-import { MessagePattern, Payload } from '@nestjs/microservices';
+import { Controller, Inject, Injectable } from '@nestjs/common';
+import { ClientKafka, MessagePattern, Payload } from '@nestjs/microservices';
 
 interface CorrectLessonMessage {
   value: {
@@ -16,18 +16,31 @@ interface CorrectLessonResponse {
 }
 
 @Controller()
+@Injectable()
 export class AppController {
+  constructor(
+    @Inject('KAFKA_PRODUCER')
+    private readonly producer: ClientKafka,
+  ) {}
   @MessagePattern('challenge.correction')
   correctLesson(
     @Payload() message: CorrectLessonMessage,
   ): CorrectLessonResponse {
     const { submissionId, repositoryUrl } = message.value;
 
-    return {
+    const lessonResponse: CorrectLessonResponse = {
       submissionId,
       repositoryUrl,
       grade: Math.floor(Math.random() * 10) + 1,
       status: 'Done',
     };
+
+    this.producer
+      .send('challenge.corrected', JSON.stringify(lessonResponse))
+      .toPromise();
+
+    console.log('recebido e enviado');
+
+    return lessonResponse;
   }
 }

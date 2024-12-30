@@ -14,6 +14,9 @@ async function bootstrap() {
         consumer: {
           groupId: 'challenge-consumer',
         },
+        producer: {
+          allowAutoTopicCreation: true,
+        },
       },
     },
   );
