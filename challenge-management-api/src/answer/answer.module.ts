@@ -5,6 +5,7 @@ import { ChallengeService } from '../challenge/challenge.service';
 import { AnswerPrismaRepository } from './repositories/implementations/answer.prisma.repository';
 import { ChallengePrismaRepository } from 'src/challenge/repositories/implementations/challenge.prisma.repository';
 import { KafkaModule } from 'src/kafka/kafka.module';
+import { AnswerConsumer } from './answer.consumer';
 
 @Module({
   imports: [KafkaModule],
@@ -15,5 +16,6 @@ import { KafkaModule } from 'src/kafka/kafka.module';
     { provide: 'AnswerRepository', useClass: AnswerPrismaRepository },
     { provide: 'ChallengeRepository', useClass: ChallengePrismaRepository },
   ],
+  controllers: [AnswerConsumer],
 })
 export class AnswerModule {}
