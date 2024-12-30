@@ -39,8 +39,6 @@ export class AppController {
       .send('challenge.corrected', JSON.stringify(lessonResponse))
       .toPromise();
 
-    console.log('recebido e enviado');
-
     return lessonResponse;
   }
 }
